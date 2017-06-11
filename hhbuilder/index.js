@@ -1,6 +1,5 @@
 /*
-  Remove a previously added person from the list
-    The user can resubmit a new list that would override the previous one
+  The user can resubmit a new list that would override the previous one
 
   Display the household list in the HTML as it is modified
 
@@ -16,7 +15,8 @@ window.onload = function() {
   document.body.appendChild(list);
 };
 
-var familyData = [];
+var familyData = {};
+var mbID = 0;
 
 document.getElementsByClassName('add')[0].addEventListener('click', function() {
   var ageValue = document.getElementsByName('age')[0].value;
@@ -25,7 +25,6 @@ document.getElementsByClassName('add')[0].addEventListener('click', function() {
   var smokerStatus = 'Non-Smoker';
   var member = document.createElement('li');
   var data = ageValue + ', ' + relValue + ', ' + smokerStatus;
-  var mbID;
 
   if (!ageValue.length && !relValue.length) {
     alert('Please complete the form with valid data. If you\'re done adding your family members, please click submit instead.');
@@ -35,36 +34,52 @@ document.getElementsByClassName('add')[0].addEventListener('click', function() {
     smokerStatus = 'Smoker';
   }
 
-  mbID = familyData.push(data) - 1;
+  familyData[mbID] = data;
 
   member.className = 'member';
-  member.innerHTML = ageValue + ', ' + relValue + ' (' + smokerStatus + ') - <span class="remove">remove member</span>';
+  member.id = mbID;
+  member.innerHTML = ageValue + ', ' + relValue + ' (' + smokerStatus + ') - <span class="remove" id="' + mbID + '"style="font-weight: bold; text-decoration: underline;">remove member</span>';
 
   document.body.appendChild(member);
-  document.getElementsByClassName('remove')[mbID].value = data;
-  document.getElementsByClassName('remove')[mbID].style.fontWeight = 'bold';
-  document.getElementsByClassName('remove')[mbID].style.textDecoration = 'underline';
   mbID++;
 });
 
-document.addEventListener('submit', function(e) {
-  e.preventDefault();
-  // get the family data
-});
-
 document.body.addEventListener('click', function(e) {
-  var value;
+  e.preventDefault();
+  var clickedID;
   if (e.target.className === 'remove') {
-    value = e.target.value;
-    removeMb(value);
+    clickedID = e.target.id;
+    removeMb(clickedID);
+  }
+
+  if (e.target.textContent === 'submit') {
+    updateJSON();
   }
 });
 
-function removeMb(value) {
-  // remove the dom node
-  // remove from the familyData arr
-  var allMbs = document.getElementsByTagName('li');
-  allMbs.forEach(function(val, i) {
-    // if ()
-  });
+function removeMb(clickedID) {
+  var allMbs = Array.from(document.getElementsByClassName('member'));
+
+  for (var i = 0; i < allMbs.length; i++) {
+    var currentID = allMbs[i].id;
+
+    if (currentID === clickedID) {
+      allMbs[i].remove();
+      delete familyData[currentID];
+      return;
+    }
+  }
+};
+
+function updateJSON() {
+  var stringified = JSON.stringify(familyData, undefined, 2);
+  var debug = document.getElementsByClassName('debug')[0];
+
+  if (debug.childNodes.length) {
+    debug.removeChild(debug.firstChild);
+    debug.append(stringified);
+  } else {
+    debug.append(stringified);
+    debug.style.display = 'inline-block';
+  }
 };
