@@ -28,12 +28,13 @@ function addMember() {
   var relValue = document.getElementsByName('rel')[0].value;
   var smokerValue = document.getElementsByName('smoker')[0].checked;
   var smokerStatus = 'Non-Smoker';
-  var member = document.createElement('li');
   var data = ageValue + ', ' + relValue + ', ' + smokerStatus;
-  var memberList;
+  var member,
+      memberList;
 
   if (!ageValue.length && !relValue.length) {
     alert('Please complete the form with valid data. If you\'re done adding your family members, please click submit instead.');
+    return;
   }
 
   if (smokerValue === true) {
@@ -46,23 +47,17 @@ function addMember() {
     smoker: smokerValue
   };
 
+  member = document.createElement('li');
   member.className = 'member';
   member.id = mbID;
   member.innerHTML = ageValue + ', ' + relValue + ' (' + smokerStatus + ') - <span class="remove" id="' + mbID + '"style="font-weight: bold; text-decoration: underline;">remove member</span>';
-
-  document.getElementsByTagName('ul')[0].appendChild(member);
-  attachListeners();
-  mbID++;
-}
-
-function attachListeners() {
-  memberList = Array.from(document.getElementsByClassName('remove'));
-  memberList.forEach(function(item) {
-    item.addEventListener('click', function(e) {
-      var clickedID = e.target.id;
-      removeMb(clickedID);
-    });
+  member.addEventListener('click', function(e) {
+    var clickedID = e.target.id;
+    removeMb(clickedID);
   });
+
+  document.getElementsByClassName('addedMembers')[0].appendChild(member);
+  mbID++;
 }
 
 function removeMb(clickedID) {
@@ -80,18 +75,18 @@ function removeMb(clickedID) {
 };
 
 function submitForm() {
-  var stringified = JSON.stringify(familyData, undefined, 2);
+  var jsonData = JSON.stringify(familyData, undefined, 2);
   var debug = document.getElementsByClassName('debug')[0];
 
-  if (stringified.length <= 2) {
+  if (jsonData.length <= 2) {
     debug.style.display = 'none';
   }
 
   if (debug.childNodes.length) {
     debug.removeChild(debug.firstChild);
-    debug.append(stringified);
+    debug.append(jsonData);
   } else {
-    debug.append(stringified);
+    debug.append(jsonData);
     debug.style.display = 'inline-block';
   }
 
