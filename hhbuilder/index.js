@@ -1,5 +1,4 @@
 var familyData = [];
-var mbID = 0;
 
 window.onload = createMemberList();
 
@@ -56,12 +55,10 @@ function addMember() {
 
   member = document.createElement('li');
   member.className = 'member';
-  member.id = mbID;
   member.innerHTML = data;
 
   document.getElementsByClassName('addedMembers')[0].appendChild(member);
   addListeners();
-  mbID++;
 }
 
 function addListeners() {
