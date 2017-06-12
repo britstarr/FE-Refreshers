@@ -35,8 +35,8 @@ function addMember() {
   var smokerValue = document.getElementsByName('smoker')[0].checked;
   var smokerStatus = 'Non-Smoker';
   var data,
-    member,
-    memberList;
+      member,
+      memberList;
 
   if (!ageValue.length && !relValue.length) {
     alert('Please complete the form with valid data. If you\'re done adding your family members, please click submit instead.');
@@ -81,7 +81,6 @@ function removeMb(clickedItem) {
 
 function submitForm() {
   var jsonData = serializeData();
-  JSON.stringify(familyData, undefined, 2);
   var debug = document.getElementsByClassName('debug')[0];
 
   if (jsonData.length <= 2) {
