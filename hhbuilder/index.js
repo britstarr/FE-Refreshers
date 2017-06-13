@@ -37,8 +37,13 @@ function addMember() {
       member,
       memberList;
 
-  if (!ageValue.length && !relValue.length) {
+  if (!ageValue.length || !relValue.length) {
     alert('Please complete the form with valid data. If you\'re done adding your family members, please click submit instead.');
+    return;
+  }
+
+  if (isNaN(parseInt(ageValue)) || parseInt(ageValue) < 0) {
+    alert('Please enter this dependent\'s age');
     return;
   }
 
