@@ -65,5 +65,5 @@ function arrayToCSV(data) {
     return arr.join(',');
   }).join('\n');
 
-  writeFile('testslcsp.csv', data);
+  writeFile('slcsp.csv', data);
 };
